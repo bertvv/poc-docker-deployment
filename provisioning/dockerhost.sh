@@ -22,6 +22,9 @@ export readonly PROVISIONING_SCRIPTS="/vagrant/provisioning/"
 # Location of files to be copied to this server
 export readonly PROVISIONING_FILES="${PROVISIONING_SCRIPTS}/files/${HOSTNAME}"
 
+# The name of the user that is going to manage the Docker service
+readonly docker_admin=vagrant
+
 #----------------------------------------------------------------------------
 # "Imports"
 #----------------------------------------------------------------------------
@@ -51,18 +54,22 @@ yum -y install \
   nano \
   vim-enhanced
 
+info "Allow ${docker_admin} to use Docker without sudo"
+
+ensure_group_exists docker
+assign_groups "${docker_admin}" docker
+
 info "Enabling services"
 systemctl enable docker.service
 systemctl enable cockpit.service
 
 info "Starting services"
-systemctl start docker.service
-systemctl start cockpit.service
+ensure_service_started docker.service
+ensure_service_started cockpit.service
 
 info "Applying firewall rules"
 firewall-cmd --permanent --add-port=9090/tcp
 firewall-cmd --permanent --add-service=http
 firewall-cmd --permanent --add-interface enp0s8
 systemctl restart firewalld.service
-
 
