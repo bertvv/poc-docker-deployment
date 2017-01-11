@@ -67,6 +67,16 @@ files_differ() {
   [ "${checksum1}" != "${checksum2}" ]
 }
 
+copy_if_different() {
+  local source_file="${1}"
+  local destination_file="${2}"
+
+  if files_differ "${source_file}" "${destination_file}"; then
+    info "Copying ${source_file} -> ${destination_file}"
+    cp "${source_file}" "${destination_file}"
+  fi
+}
+
 #----------------------------------------------------------------------------
 # BATS
 #----------------------------------------------------------------------------
