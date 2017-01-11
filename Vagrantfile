@@ -82,6 +82,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # WARNING: if the name of the current directory is the same as the
         # host name, this will fail.
         vb.customize ['modifyvm', :id, '--groups', PROJECT_NAME]
+        vb.memory = 5120
+        vb.cpus = 2
       end
 
       # Run configuration script for the VM
