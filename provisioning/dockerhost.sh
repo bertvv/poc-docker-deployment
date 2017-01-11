@@ -18,9 +18,9 @@ set -o pipefail
 #----------------------------------------------------------------------------
 
 # Location of provisioning scripts and files
-export readonly PROVISIONING_SCRIPTS="/vagrant/provisioning/"
+export readonly provisioning_scripts="/vagrant/provisioning/"
 # Location of files to be copied to this server
-export readonly PROVISIONING_FILES="${PROVISIONING_SCRIPTS}/files/${HOSTNAME}"
+export readonly provisioning_files="${provisioning_scripts}/files/${HOSTNAME}"
 
 # The name of the user that is going to manage the Docker service
 readonly docker_admin=vagrant
@@ -30,7 +30,7 @@ readonly docker_admin=vagrant
 #----------------------------------------------------------------------------
 
 # Utility functions
-source ${PROVISIONING_SCRIPTS}/util.sh
+source ${provisioning_scripts}/util.sh
 
 #----------------------------------------------------------------------------
 # Provision server
@@ -46,13 +46,14 @@ systemctl restart network
 
 info "Installing Docker, Cockpit and utilities"
 
-yum -y install \
-  docker \
-  docker-compose \
+dnf -y install \
   cockpit \
   cockpit-docker \
+  docker \
+  docker-compose \
+  git \
   nano \
-  vim-enhanced
+  patch
 
 info "Allow ${docker_admin} to use Docker without sudo"
 
@@ -63,13 +64,14 @@ info "Enabling services"
 systemctl enable docker.service
 systemctl enable cockpit.service
 
+info "Configuring firewall"
+
+ensure_service_started firewalld.service
+firewall-cmd --add-port=9090/tcp --permanent
+firewall-cmd --reload
+
 info "Starting services"
 ensure_service_started docker.service
 ensure_service_started cockpit.service
 
-info "Applying firewall rules"
-firewall-cmd --permanent --add-port=9090/tcp
-firewall-cmd --permanent --add-service=http
-firewall-cmd --permanent --add-interface enp0s8
-systemctl restart firewalld.service
-
+${provisioning_scripts}/deploy_dotnet.sh
