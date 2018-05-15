@@ -23,10 +23,10 @@ export readonly provisioning_scripts="/vagrant/provisioning/"
 export readonly provisioning_files="${provisioning_scripts}/files/${HOSTNAME}"
 
 # Git repository of the .Net application
-readonly app_name='sol10MvcInDepth'
+readonly app_name='10thBeerhallMvcAdv'
 readonly repo_url="https://github.com/WebIII/${app_name}.git"
 # Directory within the project repository containing the source code
-readonly src_dir='src/DienstenCheques'
+readonly src_dir='Beerhall'
 # Root password
 readonly db_root_password='LetMeInPLZ!!1!'
 
@@ -44,14 +44,6 @@ source ${provisioning_scripts}/util.sh
 #----------------------------------------------------------------------------
 # Script proper
 #----------------------------------------------------------------------------
-
-info "Shutting down firewalld temporarily"
-
-# Firewalld interferes with Docker's networking system, so it should not be active
-# when setting up the containers
-
-systemctl stop firewalld
-systemctl restart docker
 
 info "Clone .Net project"
 
@@ -82,9 +74,3 @@ info "Building and launching container images"
 cd "${app_root}/${src_dir}"
 docker-compose up --build -d
 
-info "Enabling firewalld"
-
-systemctl start firewalld
-systemctl enable firewalld
-firewall-cmd --add-service=http --permanent
-firewall-cmd --reload
