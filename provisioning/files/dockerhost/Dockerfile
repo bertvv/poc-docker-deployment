@@ -1,6 +1,6 @@
 # Dockerfile for .Net application container
 
-FROM microsoft/dotnet:1.0.1-sdk-projectjson
+FROM microsoft/dotnet:2.0-sdk
 
 # Create directory for the app source code
 RUN mkdir -p /app
