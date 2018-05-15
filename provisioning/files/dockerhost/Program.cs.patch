@@ -1,12 +1,15 @@
-diff --git a/src/DienstenCheques/Program.cs b/src/DienstenCheques/Program.cs
-index eb51f23..0bc5c19 100644
---- a/src/DienstenCheques/Program.cs
-+++ b/src/DienstenCheques/Program.cs
-@@ -15,6 +15,7 @@ namespace DienstenCheques
-                 .UseKestrel()
-                 .UseContentRoot(Directory.GetCurrentDirectory())
-                 .UseIISIntegration()
-+		.UseUrls("http://*:5000")
+diff --git a/Beerhall/Program.cs b/Beerhall/Program.cs
+index eab2bf1..db137c4 100644
+--- a/Beerhall/Program.cs
++++ b/Beerhall/Program.cs
+@@ -19,6 +19,9 @@ namespace Beerhall
+ 
+         public static IWebHost BuildWebHost(string[] args) =>
+             WebHost.CreateDefaultBuilder(args)
++               .UseKestrel()
++               .UseUrls("http://*:5000")
++               .UseContentRoot(Directory.GetCurrentDirectory())
                  .UseStartup<Startup>()
                  .Build();
+     }
  
