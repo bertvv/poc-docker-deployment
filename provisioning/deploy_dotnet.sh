@@ -67,10 +67,10 @@ copy_if_different \
 
 copy_if_different \
   "${provisioning_files}/appsettings.Production.json" \
-  "${app_root}/${src_dir}/appsettings.Production.json"
+  "${app_root}/${src_dir}/appsettings.json"
 
-info "Building and launching container images"
-
-cd "${app_root}/${src_dir}"
-docker-compose up --build -d
+info "To build and launch the containers:"
+info "$ vagrant ssh"
+info "$ cd ${app_root}/${src_dir}"
+info "$ docker-compose up --build"
 
