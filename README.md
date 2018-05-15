@@ -21,6 +21,12 @@ The goal of this project is to provide a playground environment for Docker and s
     ```
     $ vagrant up
     ```
+6. Log in
+    ```
+    $ vagrant ssh
+    $ cd /opt/app/10thBeerhallMvcAdv/Beerhall
+    $ docker-compose up --build
+    ```
 
 After the VM has booted and the provisioning is finished, you should be able to surf to <http://192.168.56.12/> and see the application. It may take a minute before the application is running.
 
@@ -31,7 +37,8 @@ The VM also has Cockpit installed, a dashboard for viewing system services. Poin
 - The application and the database each run in a separate container
 - The database container is based on the Docker image provided by Microsoft (this is an evaluation version for 153 days, so not suitable for production)
 - The application container is based on Microsoft's .Net application container image
-- The containers communicate over an internal network with IP address 172.17.238.0/24. To the outside, only the ASP.NET core server (Kestrel), is exposed over the standard http port (80).
+- The containers communicate over an internal network. To the outside, only the ASP.NET core server (Kestrel), is exposed over the standard http port (80).
+- The application directory on the Docker host is `/opt/app/10thBeerhallMvcAdv/Beerhall`.
 
 ## Resources
 
