@@ -62,16 +62,28 @@ assign_groups "${docker_admin}" docker
 
 info "Enabling services"
 systemctl enable docker.service
-systemctl enable cockpit.service
-
-info "Configuring firewall"
-
-ensure_service_started firewalld.service
-firewall-cmd --add-port=9090/tcp --permanent
-firewall-cmd --reload
+systemctl enable --now cockpit.socket
 
 info "Starting services"
 ensure_service_started docker.service
-ensure_service_started cockpit.service
 
+info "Enabling IP forwarding"
+
+if ! grep -q '^net\.ipv4' /etc/sysctl.conf > /dev/null 2>&1; then
+  printf "net.ipv4.ip_forward=1\\n" >> /etc/sysctl.conf
+  systemctl restart network
+fi
+
+# Run the script that deploys the .Net application
 ${provisioning_scripts}/deploy_dotnet.sh
+
+# Warning: firewalld interferes with Docker, enabling the firewall will make
+# the db container inaccessible.
+
+#info "Configuring firewall"
+
+#ensure_service_started firewalld.service
+#firewall-cmd --add-service=cockpit --permanent
+#firewall-cmd --add-service=http --permanent
+#firewall-cmd --reload
+
